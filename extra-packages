@@ -24,6 +24,7 @@ python3
 ripgrep
 speedtest-cli
 starship
+sudo
 vimdiff
 wl-clipboard
 zellij
