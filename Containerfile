@@ -23,10 +23,13 @@ RUN cp -p /etc/os-release /usr/lib/os-release
 # Clear out /media
 RUN rm -rf /media
 
+# Installing Mamba Forge
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b
+
 RUN   ln -fs /bin/sh /usr/bin/sh && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
       ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
-     
