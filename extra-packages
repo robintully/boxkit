@@ -3,7 +3,6 @@ btop
 bat
 chezmoi
 curl
-dbus-x11
 direnv
 exa
 ffmpeg
@@ -19,7 +18,6 @@ ncurses
 neofetch
 neovim
 nodejs
-plocate
 python3
 ripgrep
 speedtest-cli
@@ -28,8 +26,7 @@ sudo
 wl-clipboard
 zellij
 yarn
-vscode
 fish
 mambaforge
-nvm
+nvm-git
 visual-studio-code-bin
