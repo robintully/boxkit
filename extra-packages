@@ -1,9 +1,7 @@
 age
-atuin
 btop
 bat
 chezmoi
-cosign
 curl
 dbus-x11
 direnv
@@ -19,15 +17,15 @@ ncdu
 ncurses
 neofetch
 neovim
-npm
+nodejs
 plocate
 python3
 ripgrep
 speedtest-cli
 starship
 sudo
-vimdiff
 wl-clipboard
 zellij
 zstd
 yarn
+vscode

@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-glibc:alpine-3.17 as base-alpine
+FROM ghcr.io/void-linux/void-linux:latest-full-x86_64
 
 LABEL com.github.containers.toolbox="true" \
       name="alpine-toolbox" \
@@ -7,18 +7,16 @@ LABEL com.github.containers.toolbox="true" \
       summary="Base image for creating Alpine Linux toolbox containers" \
       maintainer="Robin Tully <robin.tully@pm.me>"
 
+
 # Install extra packages
 COPY extra-packages /
-RUN apk update && \
-    apk upgrade && \
-    cat /extra-packages | xargs apk add
-RUN rm /extra-packages
+RUN xbps-install -Syu  $(cat extra-packages)
 
 # Enable password less sudo
 RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox
 
 # Copy the os-release file
-RUN cp -p /etc/os-release /usr/lib/os-release
+# RUN cp -p /etc/os-release /usr/lib/os-release
 
 # Clear out /media
 RUN rm -rf /media
