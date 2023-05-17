@@ -16,15 +16,15 @@ USER $user
 WORKDIR /home/$user
 
 # Install yay
-RUN git clone https://aur.archlinux.org/yay.git && \
-  cd yay && \
-  makepkg -sri --needed --noconfirm && \
+RUN git clone https://aur.archlinux.org/paru.git && \
+  cd paru && \
+  makepkg -si --noconfirm && \
   cd && \
-  rm -rf .cache yay
+  rm -rf .cache paru
 
 # Install my packages
 COPY extra-packages .
-RUN cat extra-packages | xargs yay -S --noconfirm --removemake
+RUN cat extra-packages | xargs paru -S --noconfirm --removemake
 RUN rm extra-packages
 
 # Become root again and do rooty things
