@@ -1,48 +1,42 @@
-FROM ghcr.io/void-linux/void-linux:latest-full-x86_64
+FROM quay.io/toolbx-images/archlinux-toolbox:latest
 
 LABEL com.github.containers.toolbox="true" \
-      name="void-toolbox" \
-      version="3.17" \
-      usage="This image is meant to be used with the toolbox command" \
-      summary="Base image for creating Void Linux toolbox containers" \
-      maintainer="Robin Tully <robin.tully@pm.me>"
+      usage="This image is meant to be used with the toolbox or distrobox command" \
+      summary="A cloud-native terminal experience" \
+      maintainer="robintully@pm.me"
 
+RUN pacman -Syu --noconfirm
 
-# Install extra packages
-COPY extra-packages /
-RUN xbps-install -Syu  $(cat extra-packages)
+ARG user=makepkg
 
-# Enable password less sudo
-RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox
+RUN useradd --system --create-home $user && \
+  echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/$user
 
-# Copy the os-release file
-# RUN cp -p /etc/os-release /usr/lib/os-release
+USER $user
+WORKDIR /home/$user
 
-# Clear out /media
-RUN rm -rf /media
+# Install yay
+RUN git clone https://aur.archlinux.org/yay.git && \
+  cd yay && \
+  makepkg -sri --needed --noconfirm && \
+  cd && \
+  rm -rf .cache yay
 
-# Void Only Stuff
-ENV TEMP_DIR=/var/home/robin/.local/bin
-RUN mkdir -p $TEMP_DIR
-WORKDIR $TEMP_DIR
+# Install my packages
+COPY extra-packages .
+RUN cat extra-packages | xargs yay -S --noconfirm --removemake
+RUN rm extra-packages
 
+# Become root again and do rooty things
+USER root
 
+RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/bin/flatpak && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree
+     
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen && \
+    echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# Installing Mamba Forge
-ENV MAMBAFORGE_DIR=$TEMP_DIR/mambaforge
-RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p $MAMBAFORGE_DIR/mambaforge
-
-# Install NVM
-ENV NODE_VERSION=16.17.1
-ENV NVM_DIR=$TEMP_DIR/nvm
-WORKDIR $NVM_DIR
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
-  && . $NVM_DIR/nvm.sh \
-  && nvm install $NODE_VERSION \
-  && nvm alias default $NODE_VERSION \
-  && nvm use default
-
-ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
-
-WORKDIR /
+RUN nvm install 16.17.1

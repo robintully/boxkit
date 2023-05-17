@@ -30,4 +30,6 @@ zellij
 zstd
 yarn
 vscode
-fish-shell
+fish
+mambaforge
+nvm
