@@ -25,7 +25,7 @@ RUN rm -rf /media
 RUN mkdir -p /void-distrobox
 
 # Installing Mamba Forge
-ENV MAMBAFORGE_DIR=/tmp/mambaforge
+ENV MAMBAFORGE_DIR=~/.local/bin/mambaforge
 WORKDIR $MAMBAFORGE_DIR
 RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
 RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p $MAMBAFORGE_DIR/mambaforge
@@ -33,7 +33,7 @@ ENV PATH=$PATH:$MAMBAFORGE_DIR
 
 # Install NVM
 ENV NODE_VERSION=16.17.1
-ENV NVM_DIR=/tmp/nvm
+ENV NVM_DIR=~/.local/bin/nvm
 WORKDIR $NVM_DIR
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
   && . $NVM_DIR/nvm.sh \
