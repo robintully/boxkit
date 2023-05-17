@@ -27,9 +27,9 @@ starship
 sudo
 wl-clipboard
 zellij
-zstd
 yarn
 vscode
 fish
 mambaforge
 nvm
+visual-studio-code-bin
