@@ -28,7 +28,8 @@ RUN cat extra-packages | xargs paru -S --noconfirm --removemake
 RUN rm extra-packages
 
 
-
+# Become root again and do rooty things
+USER root
 
 RUN source /opt/asdf-vm/asdf.sh \
     && asdf plugin-add nodejs \
@@ -38,8 +39,7 @@ RUN source /opt/asdf-vm/asdf.sh \
 RUN mkdir -p /etc/skel/.local/share \
     && mv /root/.asdf /etc/skel/
 
-# Become root again and do rooty things
-USER root
+
 
 RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
     ln -fs /usr/bin/distrobox-host-exec /usr/bin/flatpak && \
