@@ -27,6 +27,17 @@ COPY extra-packages .
 RUN cat extra-packages | xargs paru -S --noconfirm --removemake
 RUN rm extra-packages
 
+
+
+
+RUN source /opt/asdf-vm/asdf.sh \
+    && asdf plugin-add nodejs \
+    && asdf plugin-add python
+
+
+RUN mkdir -p /etc/skel/.local/share \
+    && mv /root/.asdf /etc/skel/
+
 # Become root again and do rooty things
 USER root
 
@@ -34,9 +45,14 @@ RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
     ln -fs /usr/bin/distrobox-host-exec /usr/bin/flatpak && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree
+
+
+
      
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     locale-gen && \
     echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# RUN nvm install 16.17.1
+
+RUN echo "source /opt/asdf-vm/asdf.sh" >> /etc/profile ;\
+    sed 's/PATH=/PATH=$HOME\/.local\/bin/g' -i /etc/profile
