@@ -15,7 +15,7 @@ RUN useradd --system --create-home $user && \
 USER $user
 WORKDIR /home/$user
 
-# Install yay
+# Install paru
 RUN git clone https://aur.archlinux.org/paru.git && \
   cd paru && \
   makepkg -si --noconfirm && \
